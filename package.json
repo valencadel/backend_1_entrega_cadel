@@ -1,0 +1,27 @@
+{
+  "name": "backend_1_entrega_cadel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valencadel/backend_1_entrega_cadel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valencadel/backend_1_entrega_cadel/issues"
+  },
+  "homepage": "https://github.com/valencadel/backend_1_entrega_cadel#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "uuid": "^13.0.0"
+  }
+}

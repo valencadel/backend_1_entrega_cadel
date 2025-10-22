@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "tittle": "Auriculares Bluetooth X100",
+    "description": "Auriculares inalámbricos con cancelación de ruido y batería de larga duración.",
+    "code": "SKU-0001",
+    "price": 29999,
+    "status": true,
+    "stock": 120,
+    "category": "Audio",
+    "thumbnails": [
+      "/images/products/auriculares-x100-1.jpg",
+      "/images/products/auriculares-x100-2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "tittle": "Teclado Mecánico RGB K85",
+    "description": "Teclado mecánico con switches rojos y retroiluminación RGB personalizable.",
+    "code": "SKU-0002",
+    "price": 45999,
+    "status": true,
+    "stock": 80,
+    "category": "Periféricos",
+    "thumbnails": [
+      "/images/products/teclado-k85-1.jpg",
+      "/images/products/teclado-k85-2.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "tittle": "Mouse Gamer Pro M7",
+    "description": "Mouse gamer ergonómico con sensor óptico de 16.000 DPI y 7 botones programables.",
+    "code": "SKU-0003",
+    "price": 25999,
+    "status": true,
+    "stock": 150,
+    "category": "Periféricos",
+    "thumbnails": [
+      "/images/products/mouse-m7-1.jpg",
+      "/images/products/mouse-m7-2.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "tittle": "Monitor 27\" IPS 144Hz",
+    "description": "Monitor gamer de 27 pulgadas, panel IPS, 144Hz, 1ms y soporte HDR.",
+    "code": "SKU-0004",
+    "price": 299999,
+    "status": true,
+    "stock": 40,
+    "category": "Monitores",
+    "thumbnails": [
+      "/images/products/monitor-27-ips-1.jpg",
+      "/images/products/monitor-27-ips-2.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "tittle": "Silla Ergonómica ErgoPlus",
+    "description": "Silla ergonómica con soporte lumbar ajustable y material transpirable.",
+    "code": "SKU-0005",
+    "price": 189999,
+    "status": true,
+    "stock": 60,
+    "category": "Mobiliario",
+    "thumbnails": [
+      "/images/products/silla-ergoplus-1.jpg",
+      "/images/products/silla-ergoplus-2.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "tittle": "Disco SSD NVMe 1TB",
+    "description": "Unidad de estado sólido NVMe con velocidades de lectura de hasta 3500 MB/s.",
+    "code": "SKU-0006",
+    "price": 99999,
+    "status": true,
+    "stock": 200,
+    "category": "Almacenamiento",
+    "thumbnails": [
+      "/images/products/ssd-nvme-1tb-1.jpg",
+      "/images/products/ssd-nvme-1tb-2.jpg"
+    ]
+  },
+  {
+    "id": 7,
+    "tittle": "Notebook 14\" UltraLight i5",
+    "description": "Notebook ultraliviana con Intel Core i5, 16GB RAM y 512GB SSD.",
+    "code": "SKU-0007",
+    "price": 899999,
+    "status": true,
+    "stock": 35,
+    "category": "Notebooks",
+    "thumbnails": [
+      "/images/products/notebook-14-ultralight-1.jpg",
+      "/images/products/notebook-14-ultralight-2.jpg"
+    ]
+  },
+  {
+    "id": 8,
+    "tittle": "Smartwatch Active S3",
+    "description": "Reloj inteligente con GPS, monitoreo de salud y batería para 7 días.",
+    "code": "SKU-0008",
+    "price": 129999,
+    "status": true,
+    "stock": 90,
+    "category": "Wearables",
+    "thumbnails": [
+      "/images/products/smartwatch-active-s3-1.jpg",
+      "/images/products/smartwatch-active-s3-2.jpg"
+    ]
+  },
+  {
+    "id": 9,
+    "tittle": "Parlante Portátil BassGo",
+    "description": "Parlante portátil resistente al agua con bajos reforzados y 12h de autonomía.",
+    "code": "SKU-0009",
+    "price": 54999,
+    "status": false,
+    "stock": 70,
+    "category": "Audio",
+    "thumbnails": [
+      "/images/products/parlante-bassgo-1.jpg",
+      "/images/products/parlante-bassgo-2.jpg"
+    ]
+  },
+  {
+    "id": 10,
+    "tittle": "Cámara Web 1080p ProCam",
+    "description": "Cámara web Full HD con micrófono estéreo y tapa de privacidad.",
+    "code": "SKU-0010",
+    "price": 32999,
+    "status": true,
+    "stock": 110,
+    "category": "Periféricos",
+    "thumbnails": [
+      "/images/products/camara-procam-1.jpg",
+      "/images/products/camara-procam-2.jpg"
+    ]
+  }
+]
