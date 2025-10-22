@@ -8,10 +8,13 @@ app.use(express.json());
 
 const PORT = 8080;
 const PRODUCTS_FILE_URL = new URL('./products.json', import.meta.url);
+
 // RUTAS DE PRODUCTOS (/api/products)
 app.listen(PORT, () => {
   console.log(`El servidor esta corriendo en el puerto ${PORT}`);
 });
+
+
 // GET products tiene que listar todos los productos de la base de datos
 app.get('/api/products', async (req, res) => {
   try {
@@ -24,6 +27,8 @@ app.get('/api/products', async (req, res) => {
     res.status(500).json({ error: 'No se pudo leer products.json' });
   }
 });
+
+
 // GET products/:id tiene que listar un producto específico de la base de datos
 app.get('/api/products/:id', async (req, res) => {
   try {
@@ -40,6 +45,8 @@ app.get('/api/products/:id', async (req, res) => {
     res.status(500).json({ error: 'No se pudo leer products.json' });
   }
 });
+
+
 // POST debe agregar un nuevo producto con los siguientes campos:
 // - id: number/string (autogenerado)
 // - tittle: string
@@ -64,6 +71,8 @@ app.post('/api/products', async (req, res) => {
     res.status(500).json({ error: 'No se pudo escribir products.json' });
   }
 });
+
+
 // PUT debe actualizar un producto específico de la base de datos con los datos enviados en el body de la petición. No se debe actualizar ni eliminar el id al momeonto de haceer la actualizacion.
 app.put('/api/products/:id', async (req, res) => {
   try {
