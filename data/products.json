@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "4c15d98c-36b4-4e8e-8a1f-4738a39a8c1e",
     "tittle": "Auriculares Bluetooth X100",
     "description": "Auriculares inalámbricos con cancelación de ruido y batería de larga duración.",
     "code": "SKU-0001",
@@ -14,7 +14,7 @@
     ]
   },
   {
-    "id": 2,
+    "id": "1bde830f-5c93-43d5-a2a7-0f844f3b3b2e",
     "tittle": "Teclado Mecánico RGB K85",
     "description": "Teclado mecánico con switches rojos y retroiluminación RGB personalizable.",
     "code": "SKU-0002",
@@ -28,7 +28,7 @@
     ]
   },
   {
-    "id": 3,
+    "id": "c7d39c62-89c0-4fd1-93d0-28e3b32a5a7b",
     "tittle": "Mouse Gamer Pro M7",
     "description": "Mouse gamer ergonómico con sensor óptico de 16.000 DPI y 7 botones programables.",
     "code": "SKU-0003",
@@ -42,8 +42,8 @@
     ]
   },
   {
-    "id": 4,
-    "tittle": "Monitor 27\" IPS 144Hz",
+    "id": "6cf7b1b4-9295-4b58-9e2e-37bfe3d9fbc1",
+    "tittle": "Monitor 27' IPS 144Hz",
     "description": "Monitor gamer de 27 pulgadas, panel IPS, 144Hz, 1ms y soporte HDR.",
     "code": "SKU-0004",
     "price": 299999,
@@ -56,7 +56,7 @@
     ]
   },
   {
-    "id": 5,
+    "id": "0e33af61-9b47-4f03-a7f3-cd83c6e76079",
     "tittle": "Silla Ergonómica ErgoPlus",
     "description": "Silla ergonómica con soporte lumbar ajustable y material transpirable.",
     "code": "SKU-0005",
@@ -70,7 +70,7 @@
     ]
   },
   {
-    "id": 6,
+    "id": "9cf4ed1c-82a7-4b6d-9a34-13b489b19b09",
     "tittle": "Disco SSD NVMe 1TB",
     "description": "Unidad de estado sólido NVMe con velocidades de lectura de hasta 3500 MB/s.",
     "code": "SKU-0006",
@@ -84,8 +84,8 @@
     ]
   },
   {
-    "id": 7,
-    "tittle": "Notebook 14\" UltraLight i5",
+    "id": "f13b92ab-4c7d-49a4-a893-ccf7e86f5b4e",
+    "tittle": "Notebook 14' UltraLight i5",
     "description": "Notebook ultraliviana con Intel Core i5, 16GB RAM y 512GB SSD.",
     "code": "SKU-0007",
     "price": 899999,
@@ -98,7 +98,7 @@
     ]
   },
   {
-    "id": 8,
+    "id": "23d08fcb-f2d8-4e1d-924a-1cfafc5471a0",
     "tittle": "Smartwatch Active S3",
     "description": "Reloj inteligente con GPS, monitoreo de salud y batería para 7 días.",
     "code": "SKU-0008",
@@ -112,7 +112,7 @@
     ]
   },
   {
-    "id": 9,
+    "id": "8e11dfb6-98cb-441a-9cf3-4574a47cfef3",
     "tittle": "Parlante Portátil BassGo",
     "description": "Parlante portátil resistente al agua con bajos reforzados y 12h de autonomía.",
     "code": "SKU-0009",
@@ -126,7 +126,7 @@
     ]
   },
   {
-    "id": 10,
+    "id": "bfa3e3f9-69ed-4a44-8b3e-09c8764b8c91",
     "tittle": "Cámara Web 1080p ProCam",
     "description": "Cámara web Full HD con micrófono estéreo y tapa de privacidad.",
     "code": "SKU-0010",

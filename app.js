@@ -1,16 +1,84 @@
-import express from 'express';
 import { readFile, writeFile } from 'fs/promises';
+import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
 app.use(express.json());
 
+// quedan en el archivo pero las podemos poner en otro archivo .env como variables de entorno
 const PORT = 8080;
-const PRODUCTS_FILE_URL = new URL('./products.json', import.meta.url);
+const PRODUCTS_FILE_URL = new URL('./data/products.json', import.meta.url);
+const CATEGORIES_FILE_URL = new URL('./data/categories.json', import.meta.url);
+
+// Products Manager
+class ProductManager {
+  constructor(path) {
+    this.path = path;
+  }
+
+  static async getProducts() {
+    const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
+    const products = JSON.parse(data);
+    return products;
+  }
+
+  static async getProductById(id) {
+    const products = await this.getProducts();
+    const product = products.find(product => product.id === id);
+    if (!product) {
+      return null;
+    }
+    return product;
+  }
+
+  static async createProduct({tittle, description, code, price, status, stock, category, thumbnails}) {
+    const newProduct = {
+      id: uuidv4(),
+      tittle,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails
+    }
+    const products = await this.getProducts();
+    products.push(newProduct);
+    await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
+    console.log('Producto creado:', newProduct);
+  }
+  
+  static async updateProduct(id, {tittle, description, code, price, status, stock, category, thumbnails}) {
+    const products = await this.getProducts();
+    const product = products.find(product => product.id === id)
+    product.tittle = tittle;
+    product.description = description;
+    product.code = code;
+    product.price = price;
+    product.status = status;
+    product.stock = stock;
+    product.category = category;
+    product.thumbnails = thumbnails;
+    await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
+    console.log('Producto actualizado:', product);
+  }
+
+  static async deleteProduct(id) {
+    const products = await this.getProducts();
+    const product = products.find(product => product.id === id);
+    if (product === null) {
+      console.log('Producto no encontrado');
+      return;
+    }
+    products.splice(products.indexOf(product), 1);
+    await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
+  }
+}
 
 // RUTAS DE PRODUCTOS (/api/products)
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`El servidor esta corriendo en el puerto ${PORT}`);
 });
 
@@ -18,10 +86,9 @@ app.listen(PORT, () => {
 // GET products tiene que listar todos los productos de la base de datos
 app.get('/api/products', async (req, res) => {
   try {
-    const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
-    const products = JSON.parse(data);
+    const products = await ProductManager.getProducts();
     console.log('Productos encontrados:', products);
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     console.error('Error leyendo products.json:', error);
     res.status(500).json({ error: 'No se pudo leer products.json' });
@@ -32,17 +99,17 @@ app.get('/api/products', async (req, res) => {
 // GET products/:id tiene que listar un producto específico de la base de datos
 app.get('/api/products/:id', async (req, res) => {
   try {
-    const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
-    const products = JSON.parse(data);
-    const product = products.find(product => product.id === parseInt(req.params.id));
-    if (!product) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+    const product = await ProductManager.getProductById(req.params.id);
+    if (product === null) {
+      console.log('Producto no encontrado');
+      res.status(404).json({ error: 'Producto no encontrado' });
+      return;
     }
     console.log('Producto encontrado:', product);
-    res.json(product);
+    res.status(200).json(product);
   } catch (error) {
-    console.error('Error leyendo products.json:', error);
-    res.status(500).json({ error: 'No se pudo leer products.json' });
+    console.error('Error obteniendo producto:', error);
+    res.status(500).json({ error: 'No se pudo obtener el producto' });
   }
 });
 
@@ -59,16 +126,13 @@ app.get('/api/products/:id', async (req, res) => {
 // - thumbnails: array de strings
 app.post('/api/products', async (req, res) => {
   try {
-    const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
-    const products = JSON.parse(data);
     const newProduct = req.body;
-    newProduct.id = uuidv4();
-    products.push(newProduct);
-    await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
+    await ProductManager.createProduct(newProduct);
+    console.log('Producto creado:', newProduct);
     res.status(201).json(newProduct);
   } catch (error) {
-    console.error('Error escribiendo products.json:', error);
-    res.status(500).json({ error: 'No se pudo escribir products.json' });
+    console.error('Error creando producto:', error);
+    res.status(500).json({ error: 'No se pudo crear el producto' });
   }
 });
 
@@ -76,22 +140,41 @@ app.post('/api/products', async (req, res) => {
 // PUT debe actualizar un producto específico de la base de datos con los datos enviados en el body de la petición. No se debe actualizar ni eliminar el id al momeonto de haceer la actualizacion.
 app.put('/api/products/:id', async (req, res) => {
   try {
+    const product = await ProductManager.getProductById(req.params.id);
+    if (product === null) {
+      console.log('Producto no encontrado');
+      res.status(404).json({ error: 'Producto no encontrado' });
+      return;
+    }
+    await ProductManager.updateProduct(req.params.id, req.body);
+    console.log('Producto actualizado:', product);
+    res.status(200).json(product);
+  } catch (error) {
+    console.error('Error actualizando producto:', error);
+    res.status(500).json({ error: 'No se pudo actualizar el producto' });
+  }
+});
+
+
+// DELETE debe eliminar un producto específico de la base de datos con el id enviado en la ruta.
+app.delete('/api/products/:id', async (req, res) => {{
+  try {
     const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
     const products = JSON.parse(data);
-    const product = products.find(product => product.id === parseInt(req.params.id));
-    if (!product) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+    const product = products.find(product => product.id === req.params.id);
+    if (product === null) {
+      console.log('Producto no encontrado');
+      res.status(404).json({ error: 'Producto no encontrado' });
+      return;
     }
-    const updatedProduct = req.body;
-    Object.assign(product, updatedProduct);
-    await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
-    res.json(product);
+    await ProductManager.deleteProduct(req.params.id);
+    console.log('Producto eliminado:', product);
+    res.status(200).json(product);
   } catch (error) {
     console.error('Error escribiendo products.json:', error);
     res.status(500).json({ error: 'No se pudo escribir products.json' });
   }
-});
-// DELETE debe eliminar un producto específico de la base de datos con el id enviado en la ruta.
+}})
 
 
 // RUTAS PARA CARRITOS (/api/carts)
