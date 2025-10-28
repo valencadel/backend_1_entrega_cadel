@@ -9,9 +9,6 @@ const PRODUCTS_FILE_URL = new URL('./data/products.json', import.meta.url);
 
 // Products Manager
 class ProductManager {
-  constructor(path) {
-    this.path = path;
-  }
 
   static async getProducts() {
     const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
@@ -68,11 +65,11 @@ class ProductManager {
   }
 
   static async deleteProduct(id) {
-    const products = await this.getProducts();
-    const product = products.find(product => product.id === id);
+    const product = await this.getProductById(id);
     if (product === null) {
-      return null;
+      throw new Error('Producto no encontrado');
     }
+    const products = await this.getProducts();
     products.splice(products.indexOf(product), 1);
     await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
   }
@@ -160,14 +157,9 @@ app.put('/api/products/:id', async (req, res) => {
 // DELETE debe eliminar un producto específico de la base de datos con el id enviado en la ruta.
 app.delete('/api/products/:id', async (req, res) => {{
   try {
-   const product = await ProductManager.deleteProduct(req.params.id);
-    if (product === null) {
-      console.log('Producto no encontrado');
-      res.status(404).json({ error: 'Producto no encontrado' });
-      return;
-    }
-    console.log('Producto eliminado:', product);
-    res.status(200).json(product);
+   await ProductManager.deleteProduct(req.params.id);
+    console.log('Producto eliminado');
+    res.status(200).json({ message: 'Producto eliminado' });
   } catch (error) {
     console.error('Error eliminando producto de products.json:', error);
     res.status(500).json({ error: 'No se pudo eliminar el producto de products.json' });
@@ -179,9 +171,6 @@ app.delete('/api/products/:id', async (req, res) => {{
 const CART_FILE_URL = new URL('./data/carts.json', import.meta.url);
 
 class CartsManager {
-  constructor(path) {
-    this.path = path;
-  }
 
   static async getCarts() {
     const data = await readFile(CART_FILE_URL, 'utf-8');
