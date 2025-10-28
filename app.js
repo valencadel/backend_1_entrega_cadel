@@ -183,7 +183,7 @@ class CartsManager {
     const carts = JSON.parse(data);
     const cart = carts.find(cart => cart.id === id);
     if (cart === undefined) {
-      return null;
+      throw new Error('Carrito no encontrado');
     }
     return cart.products;
   }
@@ -203,7 +203,7 @@ class CartsManager {
     const carts = await this.getCarts();
     const cart = carts.find(cart => cart.id === cid);
     if (cart === undefined) {
-      return null;
+      throw new Error('Carrito no encontrado');
     }
     const product = cart.products.find(product => product.id === pid);
     if (product === undefined) {

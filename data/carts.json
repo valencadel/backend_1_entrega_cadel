@@ -14,7 +14,12 @@
   },
   {
     "id": "f9e8d7c6-5a4b-3c2d-1e0f-9a8b7c6d5a4b",
-    "products": []
+    "products": [
+      {
+        "id": "1",
+        "quantity": 3
+      }
+    ]
   },
   {
     "id": "796d03ea-4457-45f4-8c26-8659c08f14fe",
