@@ -3,13 +3,9 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
-
 app.use(express.json());
-
-// quedan en el archivo pero las podemos poner en otro archivo .env como variables de entorno
 const PORT = 8080;
 const PRODUCTS_FILE_URL = new URL('./data/products.json', import.meta.url);
-const CATEGORIES_FILE_URL = new URL('./data/categories.json', import.meta.url);
 
 // Products Manager
 class ProductManager {
@@ -33,6 +29,14 @@ class ProductManager {
   }
 
   static async createProduct({tittle, description, code, price, status, stock, category, thumbnails}) {
+    // Validación de campos requeridos
+    const requiredFields = { tittle, description, code, price, status, stock, category, thumbnails };
+    for (const [key, value] of Object.entries(requiredFields)) {
+      if (value === undefined || value === null) {
+        throw new Error(`Falta el campo requerido: ${key}`);
+      }
+    }
+
     const newProduct = {
       id: uuidv4(),
       tittle,
@@ -43,11 +47,10 @@ class ProductManager {
       stock,
       category,
       thumbnails
-    }
+    };
     const products = await this.getProducts();
     products.push(newProduct);
     await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
-    console.log('Producto creado:', newProduct);
   }
   
   static async updateProduct(id, {tittle, description, code, price, status, stock, category, thumbnails}) {
@@ -62,15 +65,13 @@ class ProductManager {
     product.category = category;
     product.thumbnails = thumbnails;
     await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
-    console.log('Producto actualizado:', product);
   }
 
   static async deleteProduct(id) {
     const products = await this.getProducts();
     const product = products.find(product => product.id === id);
     if (product === null) {
-      console.log('Producto no encontrado');
-      return;
+      return null;
     }
     products.splice(products.indexOf(product), 1);
     await writeFile(PRODUCTS_FILE_URL, JSON.stringify(products, null, 2));
@@ -137,7 +138,7 @@ app.post('/api/products', async (req, res) => {
 });
 
 
-// PUT debe actualizar un producto específico de la base de datos con los datos enviados en el body de la petición. No se debe actualizar ni eliminar el id al momeonto de haceer la actualizacion.
+// PUT debe actualizar un producto específico de la base de datos con los datos enviados en el body de la petición. No se debe actualizar ni eliminar el id al momento de haceer la actualizacion.
 app.put('/api/products/:id', async (req, res) => {
   try {
     const product = await ProductManager.getProductById(req.params.id);
@@ -159,34 +160,106 @@ app.put('/api/products/:id', async (req, res) => {
 // DELETE debe eliminar un producto específico de la base de datos con el id enviado en la ruta.
 app.delete('/api/products/:id', async (req, res) => {{
   try {
-    const data = await readFile(PRODUCTS_FILE_URL, 'utf-8');
-    const products = JSON.parse(data);
-    const product = products.find(product => product.id === req.params.id);
+   const product = await ProductManager.deleteProduct(req.params.id);
     if (product === null) {
       console.log('Producto no encontrado');
       res.status(404).json({ error: 'Producto no encontrado' });
       return;
     }
-    await ProductManager.deleteProduct(req.params.id);
     console.log('Producto eliminado:', product);
     res.status(200).json(product);
   } catch (error) {
-    console.error('Error escribiendo products.json:', error);
-    res.status(500).json({ error: 'No se pudo escribir products.json' });
+    console.error('Error eliminando producto de products.json:', error);
+    res.status(500).json({ error: 'No se pudo eliminar el producto de products.json' });
   }
 }})
 
 
 // RUTAS PARA CARRITOS (/api/carts)
-// POST - debe crear un nuevo carrito con un id autogenerado y products, que va a ser un array de objetos con cada producto
-// GET - /:cid debe listar los productos que pertenecen al carrito con ese id
-// POST - /:cid/product/:pid debe agregar el producto al arreglo de products con el pid al carrito con el cid proporcionado, y deberia utilizar el siguiente formato:
-// product: solo va a tener el id del producto
-// quantity: debe tener el numero de ejemplares de dicho producto en el carrito. Los productos se van a agregar de uno en uno
-// si un producto ya existente intenta agregarse, se debe incrementar el campo quantity en 1 para dicho producto
+const CART_FILE_URL = new URL('./data/carts.json', import.meta.url);
 
-// PERSISTENCIA DE DATOS
-// la persistencia se implementara usando archivos JSON en la carpeta data.
-// los archivos products.json y cats.json van a contener el listado de productos y categorias respectivamente.
-// se debe utilizar un ProductManager desarrollado en el desafio anterior y crear un CartManager que se encargue de la persistencia de los carritos.
-// sin frontend, se debe poder testear todo desde postman
+class CartsManager {
+  constructor(path) {
+    this.path = path;
+  }
+
+  static async getCarts() {
+    const data = await readFile(CART_FILE_URL, 'utf-8');
+    const carts = JSON.parse(data);
+    return carts;
+  }
+
+  static async getCartProducts(id) {
+    const data = await readFile(CART_FILE_URL, 'utf-8');
+    const carts = JSON.parse(data);
+    const cart = carts.find(cart => cart.id === id);
+    if (cart === undefined) {
+      return null;
+    }
+    return cart.products;
+  }
+
+  static async createCart() {
+    const newCart = {
+      id: uuidv4(),
+      products: []
+    }
+    const carts = await this.getCarts();
+    carts.push(newCart);
+    await writeFile(CART_FILE_URL, JSON.stringify(carts, null, 2));
+    return newCart.id;
+  }
+
+  static async addProductToCart(cid, pid) {
+    const carts = await this.getCarts();
+    const cart = carts.find(cart => cart.id === cid);
+    if (cart === undefined) {
+      return null;
+    }
+    const product = cart.products.find(product => product.id === pid);
+    if (product === undefined) {
+      cart.products.push({ id: pid, quantity: 1 });
+      await writeFile(CART_FILE_URL, JSON.stringify(carts, null, 2));
+      return cart;
+    } else {
+      product.quantity++;
+      await writeFile(CART_FILE_URL, JSON.stringify(carts, null, 2));
+      return cart;
+    }
+  }
+}
+
+
+// POST - debe crear un nuevo carrito con un id autogenerado y products, que va a ser un array de objetos con cada producto
+app.post('/api/carts', async (req,res) => {
+  try {
+    const newCartId = await CartsManager.createCart();
+    console.log('Carrito creado:', newCartId);
+    res.status(201).json({ id: newCartId });
+  } catch (error) {
+    console.error('Error creando carrito:', error);
+    res.status(500).json({ error: 'No se pudo crear el carrito' });
+  }
+})
+
+// GET - /:cid debe listar los productos que pertenecen al carrito con ese id
+app.get('/api/carts/:id', async (req,res) => {
+  try {
+    const products = await CartsManager.getCartProducts(req.params.id);
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error obteniendo productos del carrito:', error);
+    res.status(500).json({ error: 'No se pudo obtener los productos del carrito' });
+  }
+})
+
+// POST - /:cid/product/:pid debe agregar el producto al arreglo de products con el pid al carrito con el cid proporcionado, y deberia utilizar el siguiente formato:
+app.post('/api/carts/:cid/product/:pid', async (req,res) => {
+  try {
+    const cart = await CartsManager.addProductToCart(req.params.cid, req.params.pid);
+    res.status(200).json(cart);
+  } catch (error) {
+    console.error('Error agregando producto al carrito:', error);
+    res.status(500).json({ error: 'No se pudo agregar el producto al carrito' });
+  }
+})
